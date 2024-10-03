@@ -29,7 +29,7 @@ public:
 public:
     Factura(ifstream &csvFile); 
     /*un ifstream es un tipo de file stream en C++ que nos permite leer
-    datos de archivos. Lo pasamos como argumento en el constructor, porque
+    datos de archivos. Lo pasé como argumento en el constructor, porque
     de este modo evitamos abrir y cerrar el archivo muchas veces.
     Si abriéramos el archivo en cada instancia, se empezaría a leer desde
     el principio del csv, y todos los objetos tendrían los mismo datos.*/

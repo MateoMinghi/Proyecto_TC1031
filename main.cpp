@@ -13,15 +13,42 @@ using namespace std;
 
 int main() {
     vector<Factura> facturas;
-    int numFacturas;
+    
+    //se abre el csv solo una vez, evitamos que se repitan valores
+    ifstream csvFile("info_facturas.csv");
+    if (!csvFile.is_open()) {
+        return 0;
+    }
 
-    cout << "Ingrese el numero de facturas a añadir: ";
-    cin >> numFacturas;
+    string line;
+    int numFacturas = 0;
 
+    //contamos el número de filas en el csv
+    while (getline(csvFile, line)) {
+        numFacturas++;
+    }
+    
+    // reseteamos el apuntador del filestream al principio del csv
+    csvFile.clear();  
+    csvFile.seekg(0); 
+
+    cout << "Numero de facturas en el archivo: " << numFacturas << endl;
+
+    //Creamos el mismo número de instancias como hay filas en el csv
     for (int i = 0; i < numFacturas; i++) {
-        cout << "Factura #" << (i + 1) << ": ";
-        Factura nuevaFactura;  
+        Factura nuevaFactura(csvFile);  
         facturas.push_back(nuevaFactura);  
+    }
+
+    csvFile.close();//se cierra el archivo
+
+    string answer1;
+    cout << "Quiere agregar otra factura (si/no) ";
+    cin >> answer1;
+
+    if (answer1 == "si"){
+        Factura nuevaFactura;
+        facturas.push_back(nuevaFactura);
     }
 
     string answer;

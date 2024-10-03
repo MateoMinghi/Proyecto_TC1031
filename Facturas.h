@@ -4,21 +4,21 @@
  * A01711231 
  */
 
-
-/*ESTA ES LA PRIMERA VERSIÓN. VA A SER MÁS ROBUSTO*/
-
-
 #ifndef _FACTURAS_H_
 #define _FACTURAS_H_
 
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <sstream>
+
 using namespace std;
 
 class Factura {
 public:
     
+    //datos para generar la factura
     int Day, Month, Year;
     double Amount;
     string Address, RFC;
@@ -27,16 +27,39 @@ public:
 
 
 public:
-    Factura();
-    Factura(int day, int month, int year, double amount, string address, string rfc, string description ): 
-    Day(day), Month(month), Year(year), Amount(amount), Address(address), RFC(rfc), Description(description){};
+    Factura(ifstream &csvFile); 
+    /*un ifstream es un tipo de file stream en C++ que nos permite leer
+    datos de archivos. Lo pasamos como argumento en el constructor, porque
+    de este modo evitamos abrir y cerrar el archivo muchas veces.
+    Si abriéramos el archivo en cada instancia, se empezaría a leer desde
+    el principio del csv, y todos los objetos tendrían los mismo datos.*/
+
+
+    //constructor parametrizado. Por si se quiere crear una factura a mano
+    Factura(int day, int month, int year, double amount, string address, 
+    string rfc, string description ): 
+    Day(day), Month(month), Year(year), Amount(amount), Address(address), 
+    RFC(rfc), Description(description){};
     
+
+    Factura();//constructor por omisión. Permite crear una factura a mano
+
     //void bubbleSort();
     //void generateDate();
-    void printFactura();
+    void readCSV(ifstream &csvFile); //funcion para leer el csv
+    void create_new_Factura(); //crea una nueva factura manualmente
+    void printFactura(); //imprime la factura
 };
 
 Factura::Factura(){
+    create_new_Factura();
+}
+
+Factura::Factura(ifstream &csvFile) {
+    readCSV(csvFile);  //lee una fila del csv
+}
+
+void Factura::create_new_Factura(){
     cout << "Ingrese el dia: ";
     cin >> Day;
 
@@ -62,7 +85,7 @@ Factura::Factura(){
 }
 
 void Factura::printFactura(){
-    cout << "Fecha: " << Day << endl;
+    cout << "Fecha: " << Day << "," << Month << "," << Year << endl;
     cout << "Cantidad: " << Amount << endl;
     cout << "RFC: " << RFC << endl;
     cout << "Direccion: " << Address << endl;
@@ -70,20 +93,45 @@ void Factura::printFactura(){
 }
 
 
+void Factura::readCSV(ifstream &csvFile) {
+    string line, temp; //variables temporales
+
+    if (getline(csvFile, line)) { //lee una línea a la vez
+        stringstream every_line(line); 
+        /*utilizo un strinstream en vez de un string porque
+        facilitan la manipulación de strings (como extraer o insertar)*/
+
+
+        //tomamos el valor del stringstream y se lo asignamos a las variables
+        getline(every_line, temp, ',');
+        Day = stoi(temp);
+        getline(every_line, temp, ',');
+        Month = stoi(temp);
+        getline(every_line, temp, ',');
+        Year = stoi(temp);
+        getline(every_line, temp, ',');
+        Amount = stod(temp);
+        getline(every_line, RFC, ',');
+        getline(every_line, Address, ',');
+        getline(every_line, Description, ',');
+    } 
+}
 
 void bubbleSort(vector<Factura>& facturas) {
     int n = facturas.size();
     bool swapped;
 
     for (int i = 0; i < n - 1; ++i) {
+        swapped = false;
         for (int j = 0; j < n - i - 1; ++j) {
             if (facturas[j].Amount > facturas[j + 1].Amount) {
-                facturas[j], facturas[j + 1] = facturas[j + 1], facturas[j] ;
+                swap(facturas[j], facturas[j + 1]); 
+                swapped = true;
             }
         }
+        if (!swapped) break;
     }
 }
-
 
 
 

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "Facturas.h"
 
 using namespace std;
@@ -16,7 +17,7 @@ public:
     vector<Factura> facturas;
 
 private:
-    AdminFacturas();
+    AdminFacturas(){};
 };
 
 

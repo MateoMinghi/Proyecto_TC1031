@@ -98,7 +98,7 @@ void Factura::readCSV(ifstream &csvFile) {
 
     if (getline(csvFile, line)) { //lee una línea a la vez
         stringstream every_line(line); 
-        /*utilizo un strinstream en vez de un string porque
+        /*utilizo un stringstream en vez de un string porque
         facilitan la manipulación de strings (como extraer o insertar)*/
 
 

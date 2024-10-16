@@ -9,69 +9,79 @@
 
 using namespace std;
 
+class Node {
+public:
+    Factura data;
+    Node* left;
+    Node* right;
+
+    Node(Factura& factura) : data(factura), left(nullptr), right(nullptr) {}
+};
+
 class BinarySearchTree {
 private:
-    struct BSTNode {
-        Factura data;
-        BSTNode* left;
-        BSTNode* right;
+    Node* root;
 
-        BSTNode(const Factura& factura) : data(factura), left(nullptr), right(nullptr) {}
-    };
-
-    BSTNode* root;
-
-    BSTNode* insert(BSTNode* node, const Factura& factura) {
-        if (node == nullptr) {
-            return new BSTNode(factura);
-        }
-
-        if (factura.Amount < node->data.Amount) {
-            node->left = insert(node->left, factura);
-        } else {
-            node->right = insert(node->right, factura);
-        }
-
-        return node;
-    }
-
-    void inorderTraversal(BSTNode* node, vector<Factura>& result) const {
-        if (node != nullptr) {
-            inorderTraversal(node->left, result);
-            result.push_back(node->data);
-            inorderTraversal(node->right, result);
-        }
-    }
-
-    void deleteTree(BSTNode* node) {
-        if (node != nullptr) {
-            deleteTree(node->left);
-            deleteTree(node->right);
-            delete node;
-        }
-    }
-
-public:
+public: 
     BinarySearchTree() : root(nullptr) {}
 
-    ~BinarySearchTree() {
-        deleteTree(root);
-    }
+    void traversal(Node* node, vector<Factura>& result) const;
 
-    void insert(const Factura& factura) {
-        root = insert(root, factura);
-    }
+    void insert(Factura& factura);
 
-    vector<Factura> getSortedFacturas() const {
-        vector<Factura> result;
-        inorderTraversal(root, result);
-        return result;
-    }
+    vector<Factura> getSortedFacturas() const;
 
-    size_t size() const {
-        return getSortedFacturas().size();
-    }
+    long long size() const;
 };
+
+
+void BinarySearchTree::traversal(Node* node, vector<Factura>& result) const {
+    if (node != nullptr) {
+        traversal(node->left, result);
+        result.push_back(node->data);
+        traversal(node->right, result);
+    }
+}
+
+
+void BinarySearchTree::insert(Factura& factura) {
+    if (root == nullptr) {
+        root = new Node(factura);
+        return;
+    }
+
+    Node* current = root;
+    Node* parent = nullptr;
+
+    while (current != nullptr) {
+        parent = current;
+        if (factura.Amount < current->data.Amount) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+
+    if (factura.Amount < parent->data.Amount) {
+        parent->left = new Node(factura);
+    } else {
+        parent->right = new Node(factura);
+    }
+}
+
+vector<Factura> BinarySearchTree::getSortedFacturas() const {
+    vector<Factura> result;
+    traversal(root, result);
+    return result;
+    }
+
+
+long long BinarySearchTree::size() const {
+    return getSortedFacturas().size();
+}
+
+
+
 
 class FacturaManager {
 private:
@@ -125,7 +135,7 @@ public:
 
     void displayAllFacturas() {
         vector<Factura> sortedFacturas = bst.getSortedFacturas();
-        for (size_t i = 0; i < sortedFacturas.size(); ++i) {
+        for (long long i = 0; i < sortedFacturas.size(); ++i) {
             sortedFacturas[i].printFactura();
             if (i != sortedFacturas.size() - 1) {
                 cout << ",\n";
@@ -133,7 +143,7 @@ public:
         }
     }
 
-    size_t size() const {
+    long long size() const {
         return bst.size();
     }
 

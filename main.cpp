@@ -17,7 +17,7 @@ int main() {
     manager.loadFromCSV();
 
     manager.addNewFactura();
-    // The sortByAmount function call has been removed as it's no longer needed
+    
     manager.displayAllFacturas();
 
     return 0;

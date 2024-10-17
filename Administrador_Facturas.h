@@ -91,7 +91,24 @@ private:
 public:
     FacturaManager(const string& filename) : csvFilename(filename) {}
 
-    bool loadFromCSV() {
+    bool loadFromCSV();
+
+    void addNewFactura();
+    
+
+    void printFacturas();
+
+    long long size() const {
+        return bst.size();
+    }
+
+    vector<Factura> getFacturas() const {
+        return bst.getSortedFacturas();
+    }
+};
+
+
+bool FacturaManager::loadFromCSV() {
         ifstream csvFile(csvFilename);
         if (!csvFile.is_open()) {
             cout << "Error: No se pudo abrir el archivo " << csvFilename << endl;
@@ -122,34 +139,20 @@ public:
         return true;
     }
 
-    void addNewFactura() {
-        string answer;
-        cout << "Quiere agregar otra factura (si/no) ";
-        cin >> answer;
 
-        if (answer == "si") {
-            Factura nuevaFactura;
-            bst.insert(nuevaFactura);
+void FacturaManager::addNewFactura() {
+    Factura nuevaFactura;
+    bst.insert(nuevaFactura);
+}
+
+void FacturaManager::printFacturas() {
+    vector<Factura> sortedFacturas = bst.getSortedFacturas();
+    for (long long i = 0; i < sortedFacturas.size(); ++i) {
+        sortedFacturas[i].printFactura();
+        if (i != sortedFacturas.size() - 1) {
+            cout << " " << endl;
         }
     }
-
-    void displayAllFacturas() {
-        vector<Factura> sortedFacturas = bst.getSortedFacturas();
-        for (long long i = 0; i < sortedFacturas.size(); ++i) {
-            sortedFacturas[i].printFactura();
-            if (i != sortedFacturas.size() - 1) {
-                cout << ",\n";
-            }
-        }
-    }
-
-    long long size() const {
-        return bst.size();
-    }
-
-    vector<Factura> getFacturas() const {
-        return bst.getSortedFacturas();
-    }
-};
+}
 
 #endif

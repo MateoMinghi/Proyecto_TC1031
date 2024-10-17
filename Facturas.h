@@ -56,7 +56,7 @@ Factura::Factura(){
 }
 
 Factura::Factura(ifstream &csvFile) {
-    readCSV(csvFile);  //lee una fila del csv
+    readCSV(csvFile);  //lee SOLO una fila del csv
 }
 
 void Factura::create_new_Factura(){

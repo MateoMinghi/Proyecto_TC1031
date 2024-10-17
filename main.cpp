@@ -16,9 +16,21 @@ int main() {
     
     manager.loadFromCSV();
 
-    manager.addNewFactura();
-    
-    manager.displayAllFacturas();
+    while (true){
+        string answer;
+        cout << "Quiere agregar otra factura (si/no) ";
+        cin >> answer;
+        cout << " " << endl;
+
+        if (answer == "si") {
+            manager.addNewFactura();
+        }
+        else if (answer != "si"){
+            break;
+        }
+    }
+
+    manager.printFacturas();
 
     return 0;
 }

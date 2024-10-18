@@ -14,7 +14,7 @@ using namespace std;
 int main() {
     FacturaManager manager("info_facturas.csv");
     
-    manager.loadFromCSV();
+    
 
     while (true){
         string answer;

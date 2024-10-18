@@ -100,7 +100,8 @@ void Factura::readCSV(ifstream &csvFile) {
         stringstream every_line(line); 
         /*utilizo un stringstream en vez de un string porque
         facilitan la manipulación de strings (como extraer o insertar)*/
-
+        /*stringstream es, básicamente, un buffer en memória que simula
+        comportarse como un archivo*/
 
         //tomamos el valor del stringstream y se lo asignamos a las variables
         getline(every_line, temp, ',');

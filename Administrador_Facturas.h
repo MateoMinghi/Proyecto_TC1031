@@ -9,6 +9,7 @@
 
 using namespace std;
 
+//clase Nodo
 class Node {
 public:
     Factura data;
@@ -18,6 +19,7 @@ public:
     Node(Factura& factura) : data(factura), left(nullptr), right(nullptr) {}
 };
 
+//clase árbol binario
 class BinarySearchTree {
 private:
     Node* root;
@@ -34,7 +36,9 @@ public:
     long long size() const;
 };
 
-
+//con este nos movemos en el árbol
+//es un in-order traversal, lo que hace que se metan los valores
+//al vector de menor a mayor. es el equivalente al algoritmo de ordenamiento
 void BinarySearchTree::traversal(Node* node, vector<Factura>& result) const {
     if (node != nullptr) {
         traversal(node->left, result);
@@ -43,7 +47,7 @@ void BinarySearchTree::traversal(Node* node, vector<Factura>& result) const {
     }
 }
 
-
+//inseertar un nodo en el árbol
 void BinarySearchTree::insert(Factura& factura) {
     if (root == nullptr) {
         root = new Node(factura);
@@ -69,6 +73,8 @@ void BinarySearchTree::insert(Factura& factura) {
     }
 }
 
+/*esta función regresa un vector con las facturas ordenadas
+de menor a mayor, en base a la cantidad a facturar*/
 vector<Factura> BinarySearchTree::getSortedFacturas() const {
     vector<Factura> result;
     traversal(root, result);
@@ -76,6 +82,7 @@ vector<Factura> BinarySearchTree::getSortedFacturas() const {
     }
 
 
+//cantidad de elementos en el árbol
 long long BinarySearchTree::size() const {
     return getSortedFacturas().size();
 }
@@ -89,7 +96,8 @@ private:
     string csvFilename;
 
 public:
-    FacturaManager(const string& filename) : csvFilename(filename) {}
+    FacturaManager(const string& filename) : csvFilename(filename) {
+        loadFromCSV();}
 
     bool loadFromCSV();
 
@@ -107,7 +115,8 @@ public:
     }
 };
 
-
+//esta función se encarga de leer todas las líneas, y crear esa misma cantidad 
+//de facturas
 bool FacturaManager::loadFromCSV() {
         ifstream csvFile(csvFilename);
         if (!csvFile.is_open()) {
@@ -132,6 +141,7 @@ bool FacturaManager::loadFromCSV() {
         
         for (int i = 0; i < numFacturas; i++) {
             Factura nuevaFactura(csvFile);
+            /*en el constructor de factura está la función que lee una línea*/ 
             bst.insert(nuevaFactura);
         }
 
@@ -139,12 +149,13 @@ bool FacturaManager::loadFromCSV() {
         return true;
     }
 
-
+//añadir una nueva factura a mano
 void FacturaManager::addNewFactura() {
     Factura nuevaFactura;
     bst.insert(nuevaFactura);
 }
 
+//mostrar todas las facturas creadas
 void FacturaManager::printFacturas() {
     vector<Factura> sortedFacturas = bst.getSortedFacturas();
     for (long long i = 0; i < sortedFacturas.size(); ++i) {
